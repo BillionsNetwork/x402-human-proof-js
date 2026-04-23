@@ -1,0 +1,39 @@
+{
+  "name": "@0xpolygonid/x402-human-proof",
+  "version": "0.1.0",
+  "description": "Server SDK for the x402 human-proof extension — human verification for API providers using signature verification and PoU registry lookups",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "engines": {
+    "node": ">=20.11.0"
+  },
+  "files": [
+    "dist"
+  ],
+  "tsup": {
+    "entry": ["src/index.ts"],
+    "format": ["esm"],
+    "dts": true,
+    "sourcemap": true,
+    "clean": true
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch"
+  },
+  "dependencies": {
+    "@0xpolygonid/js-sdk": "^1.43.0",
+    "@iden3/js-iden3-core": "^1.8.0",
+    "@x402/core": "^2.8.0",
+    "bs58": "^6.0.0",
+    "tweetnacl": "^1.0.3",
+    "viem": "^2.37.5"
+  }
+}

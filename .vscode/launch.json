@@ -1,0 +1,34 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug: Server",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/tsx",
+      "args": ["${workspaceFolder}/examples/server/server.ts"],
+      "cwd": "${workspaceFolder}/examples/server",
+      "envFile": "${workspaceFolder}/examples/server/.env",
+      "sourceMaps": true,
+      "skipFiles": ["<node_internals>/**"]
+    },
+    {
+      "name": "Debug: Client",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/tsx",
+      "args": ["${workspaceFolder}/examples/client/index.ts"],
+      "cwd": "${workspaceFolder}/examples/client",
+      "envFile": "${workspaceFolder}/examples/client/.env",
+      "sourceMaps": true,
+      "skipFiles": ["<node_internals>/**"]
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Debug: Server + Client",
+      "configurations": ["Debug: Server", "Debug: Client"],
+      "stopAll": true
+    }
+  ]
+}

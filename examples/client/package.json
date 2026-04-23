@@ -1,0 +1,21 @@
+{
+  "name": "@x402/axios-client-example",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "tsx index.ts",
+    "dev": "tsx index.ts"
+  },
+  "dependencies": {
+    "@0xpolygonid/x402-human-proof-client": "file:../../packages/client",
+    "@x402/axios": "^2.9.0",
+    "@x402/evm": "^2.9.0",
+    "axios": "^1.13.2",
+    "dotenv": "^16.4.7",
+    "viem": "^2.39.0"
+  },
+  "devDependencies": {
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.0"
+  }
+}

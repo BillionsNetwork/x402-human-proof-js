@@ -1,0 +1,37 @@
+{
+  "name": "@0xpolygonid/x402-human-proof-client",
+  "version": "0.1.0",
+  "description": "Client helper for agent-side HUMAN-PROOF signing — wraps CAIP-122 challenge/response for EVM agents",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "engines": {
+    "node": ">=20.11.0"
+  },
+  "files": [
+    "dist"
+  ],
+  "tsup": {
+    "entry": ["src/index.ts"],
+    "format": ["esm"],
+    "dts": false,
+    "sourcemap": true,
+    "clean": true
+  },
+  "scripts": {
+    "build": "tsup && tsc --emitDeclarationOnly --declaration --outDir dist",
+    "dev": "tsup --watch"
+  },
+  "dependencies": {
+    "bs58": "^6.0.0",
+    "@0xpolygonid/js-sdk": "^1.43.0",
+    "@iden3/js-iden3-core": "^1.8.0",
+    "@x402/core": "^2.9.0"
+  }
+}

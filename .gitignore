@@ -1,0 +1,10 @@
+node_modules/
+*.js.map
+
+**/node_modules/
+**/examples/dist/
+
+**/.env
+
+**/dist/
+dist/
