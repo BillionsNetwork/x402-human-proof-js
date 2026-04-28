@@ -2,7 +2,6 @@
   "name": "x402-human-proof",
   "private": true,
   "workspaces": [
-    "packages/*",
     "examples/*"
   ],
   "scripts": {
