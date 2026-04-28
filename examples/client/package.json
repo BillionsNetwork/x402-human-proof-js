@@ -1,6 +1,7 @@
 {
   "name": "@x402/axios-client-example",
   "private": true,
+  "license": "UNLICENSED",
   "type": "module",
   "scripts": {
     "start": "tsx index.ts",
