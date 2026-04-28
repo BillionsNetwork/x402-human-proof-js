@@ -1,6 +1,7 @@
 {
   "name": "@billionsnetwork/x402-human-proof-client",
   "version": "0.1.0",
+  "license": "UNLICENSED",
   "description": "Client helper for agent-side HUMAN-PROOF signing — wraps CAIP-122 challenge/response for EVM agents",
   "type": "module",
   "main": "./dist/index.js",
@@ -18,8 +19,12 @@
     "dist"
   ],
   "tsup": {
-    "entry": ["src/index.ts"],
-    "format": ["esm"],
+    "entry": [
+      "src/index.ts"
+    ],
+    "format": [
+      "esm"
+    ],
     "dts": false,
     "sourcemap": true,
     "clean": true
