@@ -4,12 +4,15 @@
   "license": "UNLICENSED",
   "description": "Server SDK for the x402 human-proof extension — human verification for API providers using signature verification and PoU registry lookups",
   "type": "module",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "./dist/node/cjs/index.cjs",
+  "types": "./dist/types/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "types": "./dist/types/index.d.ts",
+      "node": {
+        "import": "./dist/node/esm/index.js",
+        "require": "./dist/node/cjs/index.cjs"
+      }
     }
   },
   "engines": {
@@ -18,19 +21,8 @@
   "files": [
     "dist"
   ],
-  "tsup": {
-    "entry": [
-      "src/index.ts"
-    ],
-    "format": [
-      "esm"
-    ],
-    "dts": true,
-    "sourcemap": true,
-    "clean": true
-  },
   "scripts": {
-    "build": "tsup",
+    "build": "tsup --config tsup.config.ts && tsc --emitDeclarationOnly --declaration --declarationMap --outDir dist/types",
     "dev": "tsup --watch"
   },
   "dependencies": {
