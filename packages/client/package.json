@@ -4,12 +4,17 @@
   "license": "UNLICENSED",
   "description": "Client helper for agent-side HUMAN-PROOF signing — wraps CAIP-122 challenge/response for EVM agents",
   "type": "module",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "./dist/node/cjs/index.cjs",
+  "types": "./dist/types/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "types": "./dist/types/index.d.ts",
+      "node": {
+        "import": "./dist/node/esm/index.js",
+        "require": "./dist/node/cjs/index.cjs"
+      },
+      "browser": "./dist/browser/esm/index.js",
+      "umd": "./dist/browser/umd/index.global.js"
     }
   },
   "engines": {
@@ -18,19 +23,8 @@
   "files": [
     "dist"
   ],
-  "tsup": {
-    "entry": [
-      "src/index.ts"
-    ],
-    "format": [
-      "esm"
-    ],
-    "dts": false,
-    "sourcemap": true,
-    "clean": true
-  },
   "scripts": {
-    "build": "tsup && tsc --emitDeclarationOnly --declaration --outDir dist",
+    "build": "tsup --config tsup.config.ts && tsc --emitDeclarationOnly --declaration --declarationMap --outDir dist/types",
     "dev": "tsup --watch"
   },
   "dependencies": {

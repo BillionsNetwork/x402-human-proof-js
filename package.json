@@ -2,12 +2,13 @@
   "name": "x402-human-proof",
   "private": true,
   "license": "UNLICENSED",
-  "workspaces": [
-    "examples/*"
-  ],
   "scripts": {
-    "build": "npm run build --workspace=packages/server --workspace=packages/client",
-    "dev": "npm run dev --workspaces --if-present"
+    "build": "npm run build:server && npm run build:client",
+    "build:server": "npm --prefix packages/server run build",
+    "build:client": "npm --prefix packages/client run build",
+    "dev": "npm run dev:server",
+    "dev:server": "npm --prefix packages/server run dev",
+    "dev:client": "npm --prefix packages/client run dev"
   },
   "devDependencies": {
     "@types/node": "^25.5.0",
