@@ -5,7 +5,10 @@
     "moduleResolution": "nodenext",
     "strict": true,
     "skipLibCheck": true,
-    "types": ["node"]
+    "types": ["node"],
+    "outDir": "./dist",
+    "declaration": false,
+    "declarationMap": false
   },
   "include": ["*.ts"]
 }

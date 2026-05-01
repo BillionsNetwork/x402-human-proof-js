@@ -1,6 +1,7 @@
 export type HumanResolution = {
   humanId: string
   verifiedAt: string       // ISO 8601
+  attestationId: string
 }
 
 export type DeclareHumanProofOptions = {
@@ -21,8 +22,10 @@ export type HumanVerifiedEvent = {
   type: 'human_verified'
   resource: string
   did: string
+  address: string
   humanId: string
   verifiedAt: string
+  attestationId: string
 }
 
 export type HumanNotRegisteredEvent = {

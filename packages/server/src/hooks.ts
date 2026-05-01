@@ -93,8 +93,10 @@ export async function verifyHumanProofRequest(
     type: 'human_verified',
     resource,
     did: didString,
+    address: sigResult.address,
     humanId: resolution.humanId,
     verifiedAt: resolution.verifiedAt,
+    attestationId: resolution.attestationId,
   })
 
   return { allowed: true, resolution, did: didString, chainId: payload.chainId }

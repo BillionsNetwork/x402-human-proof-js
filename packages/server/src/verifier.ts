@@ -84,6 +84,7 @@ async function lookupHumanFromExplorer(
       return {
         humanId: nullifier,
         verifiedAt: new Date(match.creationTime * 1000).toISOString(),
+        attestationId: match.id,
       }
     }
   }
