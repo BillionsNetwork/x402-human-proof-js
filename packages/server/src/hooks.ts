@@ -93,7 +93,7 @@ export async function verifyHumanProofRequest(
     type: 'human_verified',
     resource,
     did: didString,
-    ethAddress: sigResult.address,
+    address: sigResult.address,
     humanId: resolution.humanId,
     verifiedAt: resolution.verifiedAt,
     attestationId: resolution.attestationId,

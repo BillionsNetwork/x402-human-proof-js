@@ -59,7 +59,7 @@ configureHumanProofServer(server, {
   storage,
   onEvent: (event: HumanProofEvent) => {
     if (event.type === "human_verified") {
-      console.log(`Human ${event.humanId} verified at ${event.verifiedAt}. Attestation ID: ${event.attestationId}. Eth address: ${event.ethAddress}. DID: ${event.did}`);
+      console.log(`Human ${event.humanId} verified at ${event.verifiedAt}. Attestation ID: ${event.attestationId}. Address: ${event.address}. DID: ${event.did}`);
     }
     if (event.type === "human_not_registered") {
       console.warn(`Human not registered: ${event.did}`);

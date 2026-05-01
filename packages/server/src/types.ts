@@ -22,7 +22,7 @@ export type HumanVerifiedEvent = {
   type: 'human_verified'
   resource: string
   did: string
-  ethAddress: string
+  address: string
   humanId: string
   verifiedAt: string
   attestationId: string
