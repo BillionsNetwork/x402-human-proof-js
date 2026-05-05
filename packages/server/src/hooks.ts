@@ -92,11 +92,13 @@ export async function verifyHumanProofRequest(
   await onEvent?.({
     type: 'human_verified',
     resource,
-    did: didString,
-    address: sigResult.address,
     humanId: resolution.humanId,
     verifiedAt: resolution.verifiedAt,
     attestationId: resolution.attestationId,
+    humanDid: resolution.humanDid,
+    humanAddress: resolution.humanAddress,
+    agentDid: resolution.agentDid,
+    agentAddress: resolution.agentAddress, 
   })
 
   return { allowed: true, resolution, did: didString, chainId: payload.chainId }

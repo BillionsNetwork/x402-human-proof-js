@@ -21,7 +21,10 @@ type ExplorerAttestationItem = {
   fromId?: string
   recipientEthereumAddress?: string
   attesterEthereumAddress?: string
-  toEthereumAddress?: string
+  toDid: string
+  toEthereumAddress: string
+  fromDid: string
+  fromEthereumAddress: string
 }
 
 type ExplorerAttestationsResponse = {
@@ -85,6 +88,10 @@ async function lookupHumanFromExplorer(
         humanId: nullifier,
         verifiedAt: new Date(match.creationTime * 1000).toISOString(),
         attestationId: match.id,
+        humanDid: match.fromDid,
+        humanAddress: match.fromEthereumAddress,
+        agentDid: match.toDid,
+        agentAddress: match.toEthereumAddress,
       }
     }
   }
