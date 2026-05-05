@@ -43,28 +43,35 @@ The server always includes `DEFAULT_AGENT_OWNERSHIP_SCHEMA` in the challenge's `
 ```typescript
 import { x402ResourceServer, paymentMiddleware } from '@x402/express'
 import {
-  createHumanProofExtension,
-  createVerifyHumanProofHook,
+  configureHumanProofServer,
   declareHumanProofExtension,
   DEFAULT_AGENT_OWNERSHIP_SCHEMA,
 } from '@0xpolygonid/x402-human-proof'
 
-// 1. Register the extension on the x402 resource server
+// 1. Create the x402 resource server
 const server = new x402ResourceServer(facilitatorClient)
   .register('eip155:84532', new ExactEvmScheme())
-  .registerExtension(createHumanProofExtension())
 
-// 2. Hook into verification — runs after payment signature is validated
-server.onBeforeVerify(createVerifyHumanProofHook({
+// 2. Register the extension and verification hook in one call
+configureHumanProofServer(server, {
+  storage,   // implements HumanUsageStorage (required when using maxUse)
   onEvent: (event) => {
     if (event.type === 'human_verified') {
-      console.log(`Human ${event.humanId} verified at ${event.verifiedAt}`)
+      console.log(
+        `Human ${event.humanId} verified at ${event.verifiedAt}. ` +
+        `Attestation ID: ${event.attestationId}. ` +
+        `Agent: ${event.agentAddress} (${event.agentDid}). ` +
+        `Human: ${event.humanAddress} (${event.humanDid})`,
+      )
     }
     if (event.type === 'human_not_registered') {
       console.warn(`Unregistered DID: ${event.did}`)
     }
+    if (event.type === 'max_use_exceeded') {
+      console.warn(`Human ${event.humanId} hit limit of ${event.maxUse}`)
+    }
   },
-}))
+})
 
 // 3. Declare protection and payment options on each route
 app.use(paymentMiddleware({
@@ -80,6 +87,8 @@ app.use(paymentMiddleware({
         payTo: evmAddress,
         extra: {
           requiredAttestations: [DEFAULT_AGENT_OWNERSHIP_SCHEMA],
+          maxUse: 1,
+          scope: 'data_report',   // optional: isolate quota per route
         },
       },
     ],
@@ -193,20 +202,21 @@ If no discounted option matches, the selector falls back to the first option wit
 Set `extra.maxUse` on a discounted accept to cap how many times a verified human can use that price. The server enforces this atomically via `HumanUsageStorage`. When the limit is reached the server returns a `max_use_exceeded` error and the client should retry at full price:
 
 ```typescript
-// Server — pass storage to the hook
-server.onBeforeVerify(createVerifyHumanProofHook({
+// Server — pass storage to configureHumanProofServer
+configureHumanProofServer(server, {
   storage,   // implements HumanUsageStorage
   onEvent: (event) => {
     if (event.type === 'max_use_exceeded') {
       console.warn(`Human ${event.humanId} hit limit of ${event.maxUse}`)
     }
   },
-}))
+})
 
-// Route — set maxUse on the discounted accept
+// Route — set maxUse (and optionally scope) on the discounted accept
 extra: {
   requiredAttestations: [DEFAULT_AGENT_OWNERSHIP_SCHEMA],
   maxUse: 10,
+  scope: 'my_route',   // optional: isolates quota per route (defaults to resource URL)
 }
 
 // Client — detect the error and retry at full price
@@ -225,6 +235,20 @@ try {
 ## Configuration
 
 ### Server
+
+#### `configureHumanProofServer(server, options?)`
+
+Convenience function that registers the extension and wires all hooks in one call. Prefer this over calling the lower-level functions individually.
+
+| Option | Type | Description |
+|--------|------|-------------|
+| `extensionOptions` | `CreateHumanProofExtensionOptions` | Options forwarded to `createHumanProofExtension` |
+| `verifier` | `PoUVerifier` | Custom verifier instance. Takes precedence over `verifierOptions` |
+| `verifierOptions` | `PoUVerifierOptions` | Options passed to the default `createPoUVerifier` |
+| `onEvent` | `(event: HumanProofEvent) => void` | Callback for `human_verified`, `human_not_registered` and `max_use_exceeded` events |
+| `storage` | `HumanUsageStorage` | Required when any `accept` sets `extra.maxUse`. Also wires rollback hooks automatically. |
+
+> **Production note:** `HumanUsageStorage` is an interface — implement it with a persistent backend (Redis, database, etc.) so usage counts survive restarts and work across multiple server instances. The `incrementIfBelow` method must be a single atomic operation (e.g. Redis Lua script, SQL `UPDATE ... WHERE count < maxUse RETURNING count`) to prevent races under concurrent requests. The `InMemoryHumanUsageStorage` in the examples directory is for development only.
 
 #### `createHumanProofExtension(options?)`
 
@@ -247,7 +271,7 @@ Declares human-proof protection on a route.
 
 #### `createVerifyHumanProofHook(options?)`
 
-Hook for `server.onBeforeVerify`. Verifies the signed proof and checks extra attestations.
+Low-level hook for `server.onBeforeVerify`. Use `configureHumanProofServer` instead unless you need fine-grained control.
 
 | Option | Type | Description |
 |--------|------|-------------|
@@ -255,8 +279,6 @@ Hook for `server.onBeforeVerify`. Verifies the signed proof and checks extra att
 | `verifierOptions` | `PoUVerifierOptions` | Options passed to the default `createPoUVerifier` |
 | `onEvent` | `(event: HumanProofEvent) => void` | Callback for `human_verified`, `human_not_registered` and `max_use_exceeded` events |
 | `storage` | `HumanUsageStorage` | Required when any `accept` sets `extra.maxUse`. Tracks per-human usage counts. |
-
-> **Production note:** `HumanUsageStorage` is an interface — implement it with a persistent backend (Redis, database, etc.) so usage counts survive restarts and work across multiple server instances. The `incrementIfBelow` method must be a single atomic operation (e.g. Redis Lua script, SQL `UPDATE ... WHERE count < maxUse RETURNING count`) to prevent races under concurrent requests. The `InMemoryHumanUsageStorage` in the examples directory is for development only.
 
 #### `createPoUVerifier(options?)`
 
@@ -286,9 +308,15 @@ x402 client extension. Checks attestations and signs the challenge automatically
 
 ```typescript
 // x402 integration
+configureHumanProofServer(server: x402ResourceServer, options?: ConfigureHumanProofServerOptions): void
 createHumanProofExtension(options?: CreateHumanProofExtensionOptions): ResourceServerExtension
 createVerifyHumanProofHook(options?: CreateVerifyHumanProofHookOptions): BeforeVerifyHook
 declareHumanProofExtension(options: DeclareHumanProofOptions): HumanProofDeclaration
+
+// Rollback hooks (wired automatically by configureHumanProofServer when storage is provided)
+createAfterVerifyFailureRollbackHook(options: { storage: HumanUsageStorage; verifier: PoUVerifier }): AfterVerifyHook
+createVerifyFailureRollbackHook(options: { storage: HumanUsageStorage; verifier: PoUVerifier }): VerifyFailureHook
+createSettleFailureRollbackHook(options: { storage: HumanUsageStorage; verifier: PoUVerifier }): SettleFailureHook
 
 // Verifier
 createPoUVerifier(options?: PoUVerifierOptions): PoUVerifier
@@ -332,22 +360,38 @@ DEFAULT_ATTESTATIONS_API_BASE_URL: string
 
 ```typescript
 type HumanResolution = {
-  humanId: string      // Verified human ID from the PoU registry
-  verifiedAt: string   // ISO 8601 timestamp of registration
+  humanId: string        // Verified human ID from the PoU registry
+  verifiedAt: string     // ISO 8601 timestamp of registration
+  attestationId: string  // On-chain attestation ID
+  humanDid: string       // DID of the human
+  humanAddress: string   // EVM address of the human
+  agentDid: string       // DID of the agent wallet
+  agentAddress: string   // EVM address of the agent wallet
 }
 
 type HumanVerifiedEvent = {
   type: 'human_verified'
   resource: string
-  did: string
   humanId: string
   verifiedAt: string
+  attestationId: string
+  humanDid: string
+  humanAddress: string
+  agentDid: string
+  agentAddress: string
 }
 
 type HumanNotRegisteredEvent = {
   type: 'human_not_registered'
   resource: string
   did: string
+}
+
+type MaxUseExceededEvent = {
+  type: 'max_use_exceeded'
+  resource: string
+  humanId: string
+  maxUse: number
 }
 
 interface PoUVerifier {
