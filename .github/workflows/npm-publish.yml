@@ -14,7 +14,12 @@ jobs:
           node-version: '22'
           registry-url: https://registry.npmjs.org/
           cache: 'npm'
-      - run: npm ci
+      - name: install server:
+        working-directory: packages/server
+        run: npm ci
+      - name: install client:
+        working-directory: packages/client
+        run: npm ci
       - run: npm run build
       - name: Publish server
         working-directory: packages/server
