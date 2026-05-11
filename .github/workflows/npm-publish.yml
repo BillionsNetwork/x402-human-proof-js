@@ -1,4 +1,4 @@
-name: Publish package to NPM
+name: Publish packages to NPM
 
 on:
   release:
@@ -14,20 +14,29 @@ jobs:
           node-version: '22'
           registry-url: https://registry.npmjs.org/
           cache: 'npm'
-      - name: install server:
+          cache-dependency-path: |
+            package-lock.json
+            packages/server/package-lock.json
+            packages/client/package-lock.json
+      - name: Install server dependencies
         working-directory: packages/server
         run: npm ci
-      - name: install client:
+      - name: Install client dependencies
         working-directory: packages/client
         run: npm ci
-      - run: npm run build
+      - name: Build server
+        working-directory: packages/server
+        run: npm run build
+      - name: Build client
+        working-directory: packages/client
+        run: npm run build
       - name: Publish server
         working-directory: packages/server
-        run: npm publish
+        run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{secrets.BILLIONS_NPM_PUBLISH_TOKEN}}
       - name: Publish client
         working-directory: packages/client
-        run: npm publish
+        run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{secrets.BILLIONS_NPM_PUBLISH_TOKEN}}
