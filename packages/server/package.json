@@ -1,6 +1,6 @@
 {
   "name": "@billionsnetwork/x402-human-proof",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "license": "UNLICENSED",
   "description": "Server SDK for the x402 human-proof extension — human verification for API providers using signature verification and PoU registry lookups",
   "type": "module",
