@@ -16,6 +16,13 @@ jobs:
           cache: 'npm'
       - run: npm ci
       - run: npm run build
-      - run: npm publish
+      - name: Publish server
+        working-directory: packages/server
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.BILLIONS_NPM_PUBLISH_TOKEN}}
+      - name: Publish client
+        working-directory: packages/client
+        run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.BILLIONS_NPM_PUBLISH_TOKEN}}
