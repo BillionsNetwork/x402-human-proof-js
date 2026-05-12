@@ -5,7 +5,8 @@ on:
     types: [created]
 
 jobs:
-  publish-npm:
+  publish-server:
+    if: ${{ startsWith(github.event.release.tag_name, 'server-v') }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -17,26 +18,41 @@ jobs:
           cache-dependency-path: |
             package-lock.json
             packages/server/package-lock.json
-            packages/client/package-lock.json
       - name: Install root dependencies
         run: npm ci
       - name: Install server dependencies
         working-directory: packages/server
         run: npm ci
-      - name: Install client dependencies
-        working-directory: packages/client
-        run: npm ci
       - name: Build server
         working-directory: packages/server
-        run: npm run build
-      - name: Build client
-        working-directory: packages/client
         run: npm run build
       - name: Publish server
         working-directory: packages/server
         run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{secrets.BILLIONS_NPM_PUBLISH_TOKEN}}
+
+  publish-client:
+    if: ${{ startsWith(github.event.release.tag_name, 'client-v') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          registry-url: https://registry.npmjs.org/
+          cache: 'npm'
+          cache-dependency-path: |
+            package-lock.json
+            packages/client/package-lock.json
+      - name: Install root dependencies
+        run: npm ci
+      - name: Install client dependencies
+        working-directory: packages/client
+        run: npm ci
+      - name: Build client
+        working-directory: packages/client
+        run: npm run build
       - name: Publish client
         working-directory: packages/client
         run: npm publish --access public
