@@ -199,8 +199,9 @@ const DEFAULT_PAYWALL_HTML =
   "<p>Please complete the payment to access this resource.</p>" +
   "<p>The payment depends on verified-agent-identity plugin. " +
   "That can be downloaded from: " +
-  '<a href="https://clawhub.ai/obrezhniev/verified-agent-identity">clawhub.ai</a> ' +
+  '<a href="https://clawhub.ai/billionsnetwork/identity">clawhub.ai</a> ' +
   '<a href="https://skills.sh/billionsnetwork/verified-agent-identity/verified-agent-identity">skills.sh</a>' +
+  '<a href="https://github.com/BillionsNetwork/verified-agent-identity">github.com</a>' +
   "</p></body></html>"
 
 export function paywallInstructions(html?: string): PaywallProvider {
