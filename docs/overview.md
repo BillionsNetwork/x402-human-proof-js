@@ -7,7 +7,7 @@ With Human Proof, providers can offer discounted tiers, free trials, or premium 
 
 ## Server SDK — `@billionsnetwork/x402-human-proof-server`
 
-Built on top of x402, this lets service providers add human-proof verification to any API service and offer better pricing and enable spam protection to verified humans —and the verified agents they control — without touching existing routes or payment logic.
+Built as an extension to x402, this lets service providers add human-proof verification to any x402 integrated service and offer better pricing and enable spam protection to verified humans —and the verified agents they control — without touching existing routes or payment logic.
 
 **Features:**
 
