@@ -108,7 +108,7 @@ try {
 
 ### The Human-Proof Challenge
 
-When the server is configured with `@billionsnetwork/x402-human-proof`, its `402` responses include an `extensions["human-proof"]` object:
+When the server is configured with `@billionsnetwork/x402-human-proof-server`, its `402` responses include an `extensions["human-proof"]` object:
 
 ```json
 {
