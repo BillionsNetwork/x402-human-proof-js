@@ -2,6 +2,8 @@
 
 Human verification extension for the [x402 payment protocol](https://github.com/coinbase/x402). Lets API providers gate access to verified humans and offer discounted pricing to those who hold a [Billions Network](https://billions.network) Proof-of-Uniqueness (PoU) attestation.
 
+[Docs](./docs/)
+
 ## Packages
 
 | Package | Description |
