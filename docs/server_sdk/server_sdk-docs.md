@@ -4,7 +4,7 @@ Built on top of the [x402 payment protocol](https://github.com/coinbase/x402), `
 
 It enables API providers to:
 
-- **Verify that a paying agent is controlled by a unique, real human** — not a bot or a sybil wallet — using [Billions Network](https://billions.network/) Proof-of-Uniqueness (PoU) attestations.
+- **Verify that a paying agent is controlled by a unique, verifed human or agent** — not a bot or a sybil wallet — using [Billions Network](https://billions.network/) Proof-of-Uniqueness (PoU) attestations.
 - **Offer discounted pricing to agents backed by verified humans** while keeping a standard price open to all payers.
 - **Enforce per-identity usage caps** (`maxUse`) so a single human-backed agent cannot use a discounted price tier an unlimited number of times.
 - **Gate additional capabilities** behind arbitrary attestation schemas beyond the basic ownership proof.
