@@ -29,7 +29,7 @@ export async function checkAttestation(
   schemaId: string,
   options?: { attestationsApiBaseUrl?: string },
 ): Promise<boolean> {
-  const url = new URL(options?.attestationsApiBaseUrl ?? DEFAULT_ATTESTATIONS_API_BASE_URL)
+  const url = new URL(options?.attestationsApiBaseUrl || DEFAULT_ATTESTATIONS_API_BASE_URL)
   url.searchParams.set('schemaId', schemaId)
   url.searchParams.set('recipientDid', did)
 
