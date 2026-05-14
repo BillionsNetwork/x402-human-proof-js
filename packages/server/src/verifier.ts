@@ -107,9 +107,9 @@ async function lookupHumanFromExplorer(
  * const resolution = await verifier.lookupHuman('did:iden3:...', 'eip155:137')
  */
 export function createPoUVerifier(options: PoUVerifierOptions = {}): PoUVerifier {
-  const baseUrl = options.attestationsApiBaseUrl ?? DEFAULT_ATTESTATIONS_API_BASE_URL
-  const nullifierBaseUrl = options.nullifierApiBaseUrl ?? DEFAULT_NULLIFIER_API_BASE_URL
-  const ownershipSchema = options.agentOwnershipSchema ?? DEFAULT_AGENT_OWNERSHIP_SCHEMA
+  const baseUrl = options.attestationsApiBaseUrl || DEFAULT_ATTESTATIONS_API_BASE_URL
+  const nullifierBaseUrl = options.nullifierApiBaseUrl || DEFAULT_NULLIFIER_API_BASE_URL
+  const ownershipSchema = options.agentOwnershipSchema || DEFAULT_AGENT_OWNERSHIP_SCHEMA
 
   return {
     ownershipSchema,
